@@ -1,3 +1,5 @@
+var xMax = 0;
+
 function createSVG(div, width, height) {
   d3.select(div + " > svg").remove();
   var svg = d3.select(div).append("svg")
@@ -9,6 +11,14 @@ function annotate(div, objects) {
   var svg = d3.select(div + " > svg");
   for (var i in objects) {
     var o = objects[i];
+    if (o.x + o.width > xMax) {
+      xMax = o.x + o.width;
+    }
+  }
+  for (var i in objects) {
+    var o = objects[i];
+    o.x = o.x / xMax * svg.attr("width");
+    o.width = o.width / xMax * svg.attr("width");
     if (o.type == "rect") {
       svg.append("rect")
         .attr("x", o.x)
